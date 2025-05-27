@@ -6,13 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
-public class Item {
+public class Categoria {
 
-
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     private Long id;
@@ -20,12 +21,7 @@ public class Item {
     @Column(nullable = false)
     private String nome;
 
-    private Double quantidade;
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Item> itens = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "categoria_id")
-    private Categoria categoria;
-
-    @Enumerated(EnumType.STRING)
-    private Status status;
 }
