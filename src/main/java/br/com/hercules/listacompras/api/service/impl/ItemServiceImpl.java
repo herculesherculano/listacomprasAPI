@@ -1,7 +1,9 @@
 package br.com.hercules.listacompras.api.service.impl;
 
 import br.com.hercules.listacompras.api.exception.ResourceNotFoundException;
+import br.com.hercules.listacompras.api.model.Categoria;
 import br.com.hercules.listacompras.api.model.Item;
+import br.com.hercules.listacompras.api.model.Status;
 import br.com.hercules.listacompras.api.repository.ItemRepository;
 import br.com.hercules.listacompras.api.service.ItemService;
 import org.springframework.stereotype.Service;
@@ -39,5 +41,15 @@ public class ItemServiceImpl implements ItemService {
             throw new ResourceNotFoundException("Item não encontrado");
         }
         itemRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Item> buscarPorCategoria(Categoria categoria) {
+        return itemRepository.findByCategoria(categoria);
+    }
+
+    @Override
+    public List<Item> buscarPorStatus(Status status) {
+        return itemRepository.findByStatus(status);
     }
 }

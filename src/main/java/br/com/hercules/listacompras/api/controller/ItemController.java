@@ -1,6 +1,8 @@
 package br.com.hercules.listacompras.api.controller;
 
+import br.com.hercules.listacompras.api.model.Categoria;
 import br.com.hercules.listacompras.api.model.Item;
+import br.com.hercules.listacompras.api.model.Status;
 import br.com.hercules.listacompras.api.service.ItemService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +41,18 @@ public class ItemController {
     public ResponseEntity<Item> buscarItemPorId(@PathVariable Long id){
         var itemPorId = itemService.buscarItemPorId(id);
         return ResponseEntity.ok(itemPorId);
+    }
+
+    @GetMapping("/{categoria}")
+    public ResponseEntity<List<Item>> buscarPorCategoria(@PathVariable Categoria categoria){
+        var itensPorCategoria = itemService.buscarPorCategoria(categoria);
+        return ResponseEntity.ok(itensPorCategoria);
+    }
+
+    @GetMapping("/{status}")
+    public ResponseEntity<List<Item>> buscarPorStatus(@PathVariable Status status){
+        var itensPorStatus = itemService.buscarPorStatus(status);
+        return ResponseEntity.ok(itensPorStatus);
     }
 
     @DeleteMapping("/{id}")
