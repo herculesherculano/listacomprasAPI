@@ -1,5 +1,7 @@
 package br.com.hercules.listacompras.api.controller;
 
+import br.com.hercules.listacompras.api.dto.ItemRequestDTO;
+import br.com.hercules.listacompras.api.dto.ItemResponseDTO;
 import br.com.hercules.listacompras.api.model.Categoria;
 import br.com.hercules.listacompras.api.model.Item;
 import br.com.hercules.listacompras.api.model.Status;
@@ -22,8 +24,8 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Item>adicionarItem(@RequestBody Item itemAdicionar){
-        Item itemAdicionado=itemService.adicionarItem(itemAdicionar);
+    public ResponseEntity<Item>adicionarItem(@RequestBody ItemRequestDTO itemAdicionar){
+        var itemAdicionado = itemService.adicionarItem(itemAdicionar);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(itemAdicionado.getId())
@@ -32,7 +34,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Item>> buscarTodosItens(){
+    public ResponseEntity<List<ItemResponseDTO>> buscarTodosItens(){
         var todosItens = itemService.buscarTodosItens();
         return ResponseEntity.ok(todosItens);
     }

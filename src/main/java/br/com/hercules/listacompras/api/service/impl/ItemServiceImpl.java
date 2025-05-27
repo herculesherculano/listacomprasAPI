@@ -1,33 +1,60 @@
 package br.com.hercules.listacompras.api.service.impl;
 
+import br.com.hercules.listacompras.api.dto.CategoriaResponseDTO;
+import br.com.hercules.listacompras.api.dto.ItemRequestDTO;
+import br.com.hercules.listacompras.api.dto.ItemResponseDTO;
 import br.com.hercules.listacompras.api.exception.ResourceNotFoundException;
 import br.com.hercules.listacompras.api.model.Categoria;
 import br.com.hercules.listacompras.api.model.Item;
 import br.com.hercules.listacompras.api.model.Status;
+import br.com.hercules.listacompras.api.repository.CategoriaRepository;
 import br.com.hercules.listacompras.api.repository.ItemRepository;
 import br.com.hercules.listacompras.api.service.ItemService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemServiceImpl implements ItemService {
 
 
     private final ItemRepository itemRepository;
+    private final CategoriaRepository categoriaRepository;
 
-    public ItemServiceImpl(ItemRepository itemRepository){
+    public ItemServiceImpl(ItemRepository itemRepository, CategoriaRepository categoriaRepository) {
         this.itemRepository=itemRepository;
+        this.categoriaRepository=categoriaRepository;
 
     }
 
     @Override
-    public Item adicionarItem(Item novoItem) {
-        return itemRepository.save(novoItem);
+    public Item adicionarItem(ItemRequestDTO novoItem) {
+
+        Categoria categoria = categoriaRepository.findById(novoItem.getCategoriaId()).orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada"));
+
+        Item item = new Item();
+        item.setNome(novoItem.getNome());
+        item.setQuantidade(novoItem.getQuantidade());
+        item.setCategoria(categoria);
+        item.setStatus(novoItem.getStatus());
+        return itemRepository.save(item);
     }
 
-    public List<Item> buscarTodosItens(){
-        return itemRepository.findAll();
+    public List<ItemResponseDTO> buscarTodosItens(){
+        List<Item> itens = itemRepository.findAll();
+        return itens.stream()
+                .map(item -> new ItemResponseDTO(
+                        item.getId(),
+                        item.getNome(),
+                        item.getQuantidade(),
+                        item.getStatus(),
+                        new CategoriaResponseDTO(
+                                item.getCategoria().getId(),
+                                item.getCategoria().getNome()
+                        )
+                ))
+                .collect(Collectors.toList());
     }
 
     @Override
