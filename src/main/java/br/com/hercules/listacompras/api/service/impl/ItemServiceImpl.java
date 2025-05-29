@@ -29,7 +29,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item adicionarItem(ItemRequestDTO novoItem) {
+    public ItemResponseDTO adicionarItem(ItemRequestDTO novoItem) {
 
         Categoria categoria = categoriaRepository.findById(novoItem.getCategoriaId()).orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada"));
 
@@ -38,7 +38,8 @@ public class ItemServiceImpl implements ItemService {
         item.setQuantidade(novoItem.getQuantidade());
         item.setCategoria(categoria);
         item.setStatus(novoItem.getStatus());
-        return itemRepository.save(item);
+        itemRepository.save(item);
+        return new ItemResponseDTO(item.getId(), item.getNome(), item.getQuantidade(), item.getStatus(), new CategoriaResponseDTO(item.getCategoria().getId(), item.getCategoria().getNome()));
     }
 
     public List<ItemResponseDTO> buscarTodosItens(){
@@ -58,9 +59,65 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item buscarItemPorId(Long id) {
-       return itemRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Item não encontrado"));
+    public ItemResponseDTO buscarItemPorId(Long id) {
+        var item = itemRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Item não encontrado"));
+        return new ItemResponseDTO(
+                item.getId(),
+                item.getNome(),
+                item.getQuantidade(),
+                item.getStatus(),
+                new CategoriaResponseDTO(
+                        item.getCategoria().getId(),
+                        item.getCategoria().getNome()
+                )
+        );
     }
+
+    @Override
+    public List<ItemResponseDTO> buscarPorCategoria(String nomeCategoria) {
+        Categoria categoria = categoriaRepository.findByNomeIgnoreCase(nomeCategoria).orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada"));
+        List<Item> itens = itemRepository.findByCategoria(categoria);
+        return itens.stream().map(
+                item -> new ItemResponseDTO(
+                        item.getId(),
+                        item.getNome(),
+                        item.getQuantidade(),
+                        item.getStatus(),
+                        new CategoriaResponseDTO(
+                                item.getCategoria().getId(),
+                                item.getCategoria().getNome()
+                        )
+                )).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ItemResponseDTO> buscarPorStatus(Status status) {
+        List<Item> itensPorStatus = itemRepository.findByStatus(status);
+        return itensPorStatus.stream().map(
+                item -> new ItemResponseDTO(
+                        item.getId(),
+                        item.getNome(),
+                        item.getQuantidade(),
+                        item.getStatus(),
+                        new CategoriaResponseDTO(
+                                item.getCategoria().getId(),
+                                item.getCategoria().getNome()
+                        )
+                )).collect(Collectors.toList());
+    }
+
+    @Override
+    public ItemResponseDTO alterarItem(Long id, ItemRequestDTO itemAlterado) {
+        Item itemExistente = itemRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Item não encontrado"));
+        Categoria categoria = categoriaRepository.findById(itemAlterado.getCategoriaId()).orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada"));
+        itemExistente.setNome(itemAlterado.getNome());
+        itemExistente.setQuantidade(itemAlterado.getQuantidade());
+        itemExistente.setCategoria(categoria);
+        itemExistente.setStatus(itemAlterado.getStatus());
+        itemRepository.save(itemExistente);
+        return new ItemResponseDTO(itemExistente.getId(),itemExistente.getNome(),itemExistente.getQuantidade(),itemExistente.getStatus(), new CategoriaResponseDTO(itemExistente.getCategoria().getId(), itemExistente.getCategoria().getNome()));
+    }
+
 
     @Override
     public void deletarItem(Long id) {
@@ -68,15 +125,5 @@ public class ItemServiceImpl implements ItemService {
             throw new ResourceNotFoundException("Item não encontrado");
         }
         itemRepository.deleteById(id);
-    }
-
-    @Override
-    public List<Item> buscarPorCategoria(Categoria categoria) {
-        return itemRepository.findByCategoria(categoria);
-    }
-
-    @Override
-    public List<Item> buscarPorStatus(Status status) {
-        return itemRepository.findByStatus(status);
     }
 }

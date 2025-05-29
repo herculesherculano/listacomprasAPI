@@ -1,6 +1,7 @@
 package br.com.hercules.listacompras.api.controller;
 
 import br.com.hercules.listacompras.api.dto.CategoriaRequestDTO;
+import br.com.hercules.listacompras.api.dto.CategoriaResponseDTO;
 import br.com.hercules.listacompras.api.model.Categoria;
 import br.com.hercules.listacompras.api.service.CategoriaService;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoriaRequestDTO> cadastrarCategoria(@RequestBody CategoriaRequestDTO novaCategoria){
+    public ResponseEntity<CategoriaResponseDTO> cadastrarCategoria(@RequestBody CategoriaRequestDTO novaCategoria){
         var categoriaCadastrada = categoriaService.cadastrarCategoria(novaCategoria);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

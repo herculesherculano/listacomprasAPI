@@ -1,10 +1,7 @@
 package br.com.hercules.listacompras.api.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +9,7 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Categoria {
 
     @Id
@@ -19,7 +17,7 @@ public class Categoria {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nome;
 
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

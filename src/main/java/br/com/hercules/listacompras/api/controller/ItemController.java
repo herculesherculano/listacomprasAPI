@@ -1,5 +1,6 @@
 package br.com.hercules.listacompras.api.controller;
 
+import br.com.hercules.listacompras.api.dto.CategoriaResponseDTO;
 import br.com.hercules.listacompras.api.dto.ItemRequestDTO;
 import br.com.hercules.listacompras.api.dto.ItemResponseDTO;
 import br.com.hercules.listacompras.api.model.Categoria;
@@ -24,7 +25,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Item>adicionarItem(@RequestBody ItemRequestDTO itemAdicionar){
+    public ResponseEntity<ItemResponseDTO>adicionarItem(@RequestBody ItemRequestDTO itemAdicionar){
         var itemAdicionado = itemService.adicionarItem(itemAdicionar);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -40,25 +41,32 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Item> buscarItemPorId(@PathVariable Long id){
+    public ResponseEntity<ItemResponseDTO> buscarItemPorId(@PathVariable Long id){
         var itemPorId = itemService.buscarItemPorId(id);
         return ResponseEntity.ok(itemPorId);
     }
 
-    @GetMapping("/{categoria}")
-    public ResponseEntity<List<Item>> buscarPorCategoria(@PathVariable Categoria categoria){
-        var itensPorCategoria = itemService.buscarPorCategoria(categoria);
+    @GetMapping("/categoria/{nomeCategoria}")
+    public ResponseEntity<List<ItemResponseDTO>> buscarPorCategoria(@PathVariable String nomeCategoria){
+        var itensPorCategoria = itemService.buscarPorCategoria(nomeCategoria);
         return ResponseEntity.ok(itensPorCategoria);
     }
 
-    @GetMapping("/{status}")
-    public ResponseEntity<List<Item>> buscarPorStatus(@PathVariable Status status){
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<ItemResponseDTO>> buscarPorStatus(@PathVariable Status status){
+
         var itensPorStatus = itemService.buscarPorStatus(status);
         return ResponseEntity.ok(itensPorStatus);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ItemResponseDTO> alterarItem(@PathVariable Long id, @RequestBody ItemRequestDTO itemParaAtualizar){
+        var itemAtualizado = itemService.alterarItem(id, itemParaAtualizar);
+        return ResponseEntity.ok(itemAtualizado);
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Item> deletarItem(@PathVariable Long id){
+    public ResponseEntity<ItemResponseDTO> deletarItem(@PathVariable Long id){
         itemService.deletarItem(id);
         return ResponseEntity.noContent().build();
 

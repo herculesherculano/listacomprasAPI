@@ -1,5 +1,6 @@
 package br.com.hercules.listacompras.api.repository;
 
+import br.com.hercules.listacompras.api.dto.CategoriaResponseDTO;
 import br.com.hercules.listacompras.api.model.Categoria;
 import br.com.hercules.listacompras.api.model.Item;
 import br.com.hercules.listacompras.api.model.Status;
