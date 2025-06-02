@@ -18,4 +18,6 @@ public interface ItemService {
     public List<ItemResponseDTO> buscarPorCategoria(String nomeCategoria);
     public List<ItemResponseDTO> buscarPorStatus(Status status);
     public ItemResponseDTO alterarItem(Long id, ItemRequestDTO itemAlterado);
+    public ItemResponseDTO alterarStatusItem(Long id, Status status);
+    public List<ItemResponseDTO> buscarPorCategoriaStatus (String nomeCategoria, Status status);
 }

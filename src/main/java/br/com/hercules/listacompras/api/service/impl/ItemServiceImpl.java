@@ -106,6 +106,22 @@ public class ItemServiceImpl implements ItemService {
                 )).collect(Collectors.toList());
     }
 
+    public List<ItemResponseDTO> buscarPorCategoriaStatus (String nomeCategoria, Status status){
+        Categoria categoria = categoriaRepository.findByNomeIgnoreCase(nomeCategoria).orElseThrow(()-> new ResourceNotFoundException("Categoria não encontrada"));
+        List<Item> itensCategoriaStatus = itemRepository.findByCategoriaAndStatus(categoria, status);
+        return itensCategoriaStatus.stream().map(
+                item -> new ItemResponseDTO(
+                        item.getId(),
+                        item.getNome(),
+                        item.getQuantidade(),
+                        item.getStatus(),
+                        new CategoriaResponseDTO(
+                                item.getCategoria().getId(),
+                                item.getCategoria().getNome()
+                        )
+                )).collect(Collectors.toList());
+    }
+
     @Override
     public ItemResponseDTO alterarItem(Long id, ItemRequestDTO itemAlterado) {
         Item itemExistente = itemRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Item não encontrado"));
@@ -116,6 +132,14 @@ public class ItemServiceImpl implements ItemService {
         itemExistente.setStatus(itemAlterado.getStatus());
         itemRepository.save(itemExistente);
         return new ItemResponseDTO(itemExistente.getId(),itemExistente.getNome(),itemExistente.getQuantidade(),itemExistente.getStatus(), new CategoriaResponseDTO(itemExistente.getCategoria().getId(), itemExistente.getCategoria().getNome()));
+    }
+
+    @Override
+    public ItemResponseDTO alterarStatusItem(Long id, Status status) {
+        Item item = itemRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Item não encontrado"));
+        item.setStatus(status);
+        itemRepository.save(item);
+        return new ItemResponseDTO(item.getId(), item.getNome(), item.getQuantidade(), item.getStatus(), new CategoriaResponseDTO(item.getCategoria().getId(), item.getCategoria().getNome()));
     }
 
 

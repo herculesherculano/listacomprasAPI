@@ -59,10 +59,22 @@ public class ItemController {
         return ResponseEntity.ok(itensPorStatus);
     }
 
+    @GetMapping("/categoria/{nomeCategoria}/{status}")
+    public ResponseEntity<List<ItemResponseDTO>> buscarPorCategoriaStatus(@PathVariable String nomeCategoria, @PathVariable Status status){
+        var itensPorCategoriaStatus = itemService.buscarPorCategoriaStatus(nomeCategoria, status);
+        return ResponseEntity.ok(itensPorCategoriaStatus);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ItemResponseDTO> alterarItem(@PathVariable Long id, @RequestBody ItemRequestDTO itemParaAtualizar){
         var itemAtualizado = itemService.alterarItem(id, itemParaAtualizar);
         return ResponseEntity.ok(itemAtualizado);
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<ItemResponseDTO> alterarStatusItem(@PathVariable Long id, @RequestParam Status status){
+        var statusAtualizado = itemService.alterarStatusItem(id, status);
+        return ResponseEntity.ok(statusAtualizado);
     }
 
     @DeleteMapping("/{id}")
