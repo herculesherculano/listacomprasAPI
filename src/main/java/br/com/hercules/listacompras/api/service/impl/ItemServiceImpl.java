@@ -9,6 +9,7 @@ import br.com.hercules.listacompras.api.model.Item;
 import br.com.hercules.listacompras.api.model.Status;
 import br.com.hercules.listacompras.api.repository.CategoriaRepository;
 import br.com.hercules.listacompras.api.repository.ItemRepository;
+import br.com.hercules.listacompras.api.service.CategoriaService;
 import br.com.hercules.listacompras.api.service.ItemService;
 import org.springframework.stereotype.Service;
 
@@ -21,17 +22,20 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final CategoriaRepository categoriaRepository;
+    private final CategoriaService categoriaService;
 
-    public ItemServiceImpl(ItemRepository itemRepository, CategoriaRepository categoriaRepository) {
+    public ItemServiceImpl(ItemRepository itemRepository, CategoriaRepository categoriaRepository, CategoriaService categoriaService)  {
         this.itemRepository=itemRepository;
         this.categoriaRepository=categoriaRepository;
+        this.categoriaService=categoriaService;
 
     }
 
     @Override
     public ItemResponseDTO adicionarItem(ItemRequestDTO novoItem) {
 
-        Categoria categoria = categoriaRepository.findById(novoItem.getCategoriaId()).orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada"));
+        String nomeCategoria = categoriaService.preverCategoria(novoItem.getNome());
+        Categoria categoria = categoriaRepository.findByNomeIgnoreCase(nomeCategoria).orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada"));
 
         Item item = new Item();
         item.setNome(novoItem.getNome());

@@ -7,5 +7,5 @@ import br.com.hercules.listacompras.api.model.Categoria;
 public interface CategoriaService {
 
     public CategoriaResponseDTO cadastrarCategoria(CategoriaRequestDTO novaCategoria);
-
+    public String preverCategoria(String nomeItem);
 }
