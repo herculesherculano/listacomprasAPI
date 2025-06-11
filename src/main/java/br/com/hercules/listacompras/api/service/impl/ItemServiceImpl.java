@@ -21,12 +21,10 @@ public class ItemServiceImpl implements ItemService {
 
 
     private final ItemRepository itemRepository;
-    private final CategoriaRepository categoriaRepository;
     private final CategoriaService categoriaService;
 
-    public ItemServiceImpl(ItemRepository itemRepository, CategoriaRepository categoriaRepository, CategoriaService categoriaService)  {
+    public ItemServiceImpl(ItemRepository itemRepository, CategoriaService categoriaService)  {
         this.itemRepository=itemRepository;
-        this.categoriaRepository=categoriaRepository;
         this.categoriaService=categoriaService;
 
     }
@@ -35,7 +33,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemResponseDTO adicionarItem(ItemRequestDTO novoItem) {
 
         String nomeCategoria = categoriaService.preverCategoria(novoItem.getNome());
-        Categoria categoria = categoriaRepository.findByNomeIgnoreCase(nomeCategoria).orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada"));
+        Categoria categoria = categoriaService.buscarCategoriaPorNome(nomeCategoria);
 
         Item item = new Item();
         item.setNome(novoItem.getNome());
@@ -79,7 +77,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemResponseDTO> buscarPorCategoria(String nomeCategoria) {
-        Categoria categoria = categoriaRepository.findByNomeIgnoreCase(nomeCategoria).orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada"));
+        Categoria categoria = categoriaService.buscarCategoriaPorNome(nomeCategoria);
         List<Item> itens = itemRepository.findByCategoria(categoria);
         return itens.stream().map(
                 item -> new ItemResponseDTO(
@@ -111,7 +109,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public List<ItemResponseDTO> buscarPorCategoriaStatus (String nomeCategoria, Status status){
-        Categoria categoria = categoriaRepository.findByNomeIgnoreCase(nomeCategoria).orElseThrow(()-> new ResourceNotFoundException("Categoria não encontrada"));
+        Categoria categoria = categoriaService.buscarCategoriaPorNome(nomeCategoria);
         List<Item> itensCategoriaStatus = itemRepository.findByCategoriaAndStatus(categoria, status);
         return itensCategoriaStatus.stream().map(
                 item -> new ItemResponseDTO(
@@ -129,7 +127,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemResponseDTO alterarItem(Long id, ItemRequestDTO itemAlterado) {
         Item itemExistente = itemRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Item não encontrado"));
-        Categoria categoria = categoriaRepository.findById(itemAlterado.getCategoriaId()).orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada"));
+        Categoria categoria = categoriaService.buscarCategoriaPorId(itemAlterado.getCategoriaId());
         itemExistente.setNome(itemAlterado.getNome());
         itemExistente.setQuantidade(itemAlterado.getQuantidade());
         itemExistente.setCategoria(categoria);

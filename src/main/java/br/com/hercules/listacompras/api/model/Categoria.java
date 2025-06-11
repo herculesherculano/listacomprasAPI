@@ -23,4 +23,9 @@ public class Categoria {
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Item> itens = new ArrayList<>();
 
+    public Categoria(Long id, String nome){
+        this.id=id;
+        this.nome=nome;
+    }
+
 }

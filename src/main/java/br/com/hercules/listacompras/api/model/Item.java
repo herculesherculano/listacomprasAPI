@@ -1,14 +1,12 @@
 package br.com.hercules.listacompras.api.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Item {
 
 
