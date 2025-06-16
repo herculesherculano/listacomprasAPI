@@ -8,6 +8,7 @@ import br.com.hercules.listacompras.api.exception.ResourceNotFoundException;
 import br.com.hercules.listacompras.api.model.Categoria;
 import br.com.hercules.listacompras.api.repository.CategoriaRepository;
 import br.com.hercules.listacompras.api.service.CategoriaService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +20,14 @@ import java.util.Optional;
 @Service
 public class CategoriaServiceImpl  implements CategoriaService {
 
-
     private final CategoriaRepository categoriaRepository;
+    private final RestTemplate restTemplate;
+    private final String url;
 
-    public CategoriaServiceImpl(CategoriaRepository categoriaRepository){
+    public CategoriaServiceImpl(CategoriaRepository categoriaRepository, RestTemplate restTemplate, @Value("${categoria.api.url}") String url ){
         this.categoriaRepository=categoriaRepository;
+        this.restTemplate=restTemplate;
+        this.url = url;
     }
 
     @Override
@@ -49,21 +53,15 @@ public class CategoriaServiceImpl  implements CategoriaService {
     }
 
     public String preverCategoria(String nomeItem) {
-        String url=  "http://127.0.0.1:8000/prever/";
 
-        RestTemplate restTemplate = new RestTemplate();
         ItemCategoriaRequestDTO requestDTO = new ItemCategoriaRequestDTO(nomeItem);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<ItemCategoriaRequestDTO> entity = new HttpEntity<>(requestDTO, headers);
         ResponseEntity<ItemCategoriaResponseDTO> response = restTemplate.postForEntity(url, entity, ItemCategoriaResponseDTO.class);
 
-        System.out.println("🔍 Status: " + response.getStatusCode());
-        System.out.println("🔍 Body: " + response.getBody());
-        System.out.println(response.getBody().getCategoria());
-
-        if (response.getBody() == null) {
-            throw new IllegalStateException("A resposta veio nula da API Python.");
+        if (response == null || response.getBody() == null) {
+            throw new IllegalStateException("A previsão de categoria falhou: corpo da resposta da API está nulo.");
         }
         return response.getBody().getCategoria();
     }
