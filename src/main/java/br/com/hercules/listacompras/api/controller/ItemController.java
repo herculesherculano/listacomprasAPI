@@ -7,6 +7,7 @@ import br.com.hercules.listacompras.api.model.Categoria;
 import br.com.hercules.listacompras.api.model.Item;
 import br.com.hercules.listacompras.api.model.Status;
 import br.com.hercules.listacompras.api.service.ItemService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -25,7 +26,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<ItemResponseDTO>adicionarItem(@RequestBody ItemRequestDTO itemAdicionar){
+    public ResponseEntity<ItemResponseDTO>adicionarItem(@RequestBody  @Valid ItemRequestDTO itemAdicionar){
         var itemAdicionado = itemService.adicionarItem(itemAdicionar);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
