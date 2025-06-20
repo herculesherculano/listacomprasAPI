@@ -30,7 +30,7 @@ public class CategoriaController {
                 .path("/{id}")
                 .buildAndExpand(categoriaCadastrada.getId())
                 .toUri();
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(categoriaCadastrada);
     }
 
 }
