@@ -32,4 +32,5 @@ public class CategoriaController {
                 .toUri();
         return ResponseEntity.created(location).build();
     }
+
 }

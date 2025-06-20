@@ -32,7 +32,7 @@ public class ItemController {
                 .path("/{id}")
                 .buildAndExpand(itemAdicionado.getId())
                 .toUri();
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(itemAdicionado);
     }
 
     @GetMapping
@@ -79,7 +79,7 @@ public class ItemController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ItemResponseDTO> deletarItem(@PathVariable Long id){
+    public ResponseEntity<Void> deletarItem(@PathVariable Long id){
         itemService.deletarItem(id);
         return ResponseEntity.noContent().build();
 
