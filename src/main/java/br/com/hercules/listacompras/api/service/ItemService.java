@@ -1,5 +1,6 @@
 package br.com.hercules.listacompras.api.service;
 
+import br.com.hercules.listacompras.api.dto.CategoriaRequestDTO;
 import br.com.hercules.listacompras.api.dto.CategoriaResponseDTO;
 import br.com.hercules.listacompras.api.dto.ItemRequestDTO;
 import br.com.hercules.listacompras.api.dto.ItemResponseDTO;
@@ -19,5 +20,6 @@ public interface ItemService {
     public List<ItemResponseDTO> buscarPorStatus(Status status);
     public ItemResponseDTO alterarItem(Long id, ItemRequestDTO itemAlterado);
     public ItemResponseDTO alterarStatusItem(Long id, Status status);
+    public ItemResponseDTO alterarCategoriaItem(Long id, String nomeCategoria);
     public List<ItemResponseDTO> buscarPorCategoriaStatus (String nomeCategoria, Status status);
 }

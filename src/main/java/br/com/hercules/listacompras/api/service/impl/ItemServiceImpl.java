@@ -1,5 +1,6 @@
 package br.com.hercules.listacompras.api.service.impl;
 
+import br.com.hercules.listacompras.api.dto.CategoriaRequestDTO;
 import br.com.hercules.listacompras.api.dto.CategoriaResponseDTO;
 import br.com.hercules.listacompras.api.dto.ItemRequestDTO;
 import br.com.hercules.listacompras.api.dto.ItemResponseDTO;
@@ -143,6 +144,14 @@ public class ItemServiceImpl implements ItemService {
         return new ItemResponseDTO(item.getId(), item.getNome(), item.getQuantidade(), item.getStatus(), new CategoriaResponseDTO(item.getCategoria().getId(), item.getCategoria().getNome()));
     }
 
+    @Override
+    public ItemResponseDTO alterarCategoriaItem(Long id, String nomeCategoria) {
+        Categoria categoria = categoriaService.buscarCategoriaPorNome(nomeCategoria);
+        Item item = itemRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Item não encontrado"));
+        item.setCategoria(categoria);
+        itemRepository.save(item);
+        return new ItemResponseDTO(item.getId(), item.getNome(), item.getQuantidade(), item.getStatus(), new CategoriaResponseDTO(item.getCategoria().getId(), item.getCategoria().getNome()));
+    }
 
     @Override
     public void deletarItem(Long id) {

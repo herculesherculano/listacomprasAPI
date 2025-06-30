@@ -78,6 +78,12 @@ public class ItemController {
         return ResponseEntity.ok(statusAtualizado);
     }
 
+    @PutMapping("/{id}/categoria")
+    public ResponseEntity<ItemResponseDTO> alterarCategoriaItem(@PathVariable Long id, @RequestBody String nomeCategoria){
+        var categoriaAtualizada = itemService.alterarCategoriaItem(id, nomeCategoria);
+        return ResponseEntity.ok(categoriaAtualizada);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarItem(@PathVariable Long id){
         itemService.deletarItem(id);
