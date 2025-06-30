@@ -8,15 +8,18 @@ import br.com.hercules.listacompras.api.exception.ResourceNotFoundException;
 import br.com.hercules.listacompras.api.model.Categoria;
 import br.com.hercules.listacompras.api.repository.CategoriaRepository;
 import br.com.hercules.listacompras.api.service.CategoriaService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpHeaders;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class CategoriaServiceImpl  implements CategoriaService {
 
@@ -58,11 +61,19 @@ public class CategoriaServiceImpl  implements CategoriaService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<ItemCategoriaRequestDTO> entity = new HttpEntity<>(requestDTO, headers);
-        ResponseEntity<ItemCategoriaResponseDTO> response = restTemplate.postForEntity(url, entity, ItemCategoriaResponseDTO.class);
 
-        if (response == null || response.getBody() == null) {
-            throw new IllegalStateException("A previsão de categoria falhou: corpo da resposta da API está nulo.");
+        try{
+            ResponseEntity<ItemCategoriaResponseDTO> response = restTemplate.postForEntity(url, entity, ItemCategoriaResponseDTO.class);
+
+            if (response == null || response.getBody() == null) {
+                throw new IllegalStateException("A previsão de categoria falhou: corpo da resposta da API está nulo.");
+            }
+
+            return response.getBody().getCategoria();
+
+        }catch (ResourceAccessException e){
+            log.warn("API Python de Previsão de Categoria Indisponível. Usando categoria padrão");
+            return "NÃO CATEGORIZADO";
         }
-        return response.getBody().getCategoria();
     }
 }

@@ -7,7 +7,6 @@ import br.com.hercules.listacompras.api.exception.ResourceNotFoundException;
 import br.com.hercules.listacompras.api.model.Categoria;
 import br.com.hercules.listacompras.api.model.Item;
 import br.com.hercules.listacompras.api.model.Status;
-import br.com.hercules.listacompras.api.repository.CategoriaRepository;
 import br.com.hercules.listacompras.api.repository.ItemRepository;
 import br.com.hercules.listacompras.api.service.CategoriaService;
 import br.com.hercules.listacompras.api.service.ItemService;
@@ -39,7 +38,7 @@ public class ItemServiceImpl implements ItemService {
         item.setNome(novoItem.getNome());
         item.setQuantidade(novoItem.getQuantidade());
         item.setCategoria(categoria);
-        item.setStatus(novoItem.getStatus());
+        item.setStatus(Status.PENDENTE);
         itemRepository.save(item);
         return new ItemResponseDTO(item.getId(), item.getNome(), item.getQuantidade(), item.getStatus(), new CategoriaResponseDTO(item.getCategoria().getId(), item.getCategoria().getNome()));
     }
