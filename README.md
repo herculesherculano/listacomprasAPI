@@ -13,7 +13,7 @@
 
 ## 📌 Descrição
 
-API REST desenvolvida em Java com Spring Boot para gerenciamento de uma lista de compras.
+API REST desenvolvida em Java com Spring Boot para gerenciamento de lista de compras.
 
 O sistema oferece operações completas de CRUD e filtragem de itens por categoria e status, com categorização automática dos itens utilizando uma API externa em Python baseada em machine learning.
 
