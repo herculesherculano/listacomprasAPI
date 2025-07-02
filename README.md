@@ -139,11 +139,9 @@ mvn spring-boot:run
 
 ### 📋 Documentação da API
 
-Acesse após rodar:
+Após iniciar a aplicação, acesse:
 
-```
-http://localhost:8080/swagger-ui.html
-```
+🔗 [Swagger UI](http://localhost:8080/swagger-ui.html)
 
 ---
 
