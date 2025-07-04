@@ -17,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpHeaders;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -44,6 +47,19 @@ public class CategoriaServiceImpl  implements CategoriaService {
         Categoria categoriaSalva = categoriaRepository.save(categoria);
         return new CategoriaResponseDTO(categoriaSalva.getId(), categoriaSalva.getNome());
     }
+
+    @Override
+    public List<CategoriaResponseDTO> buscarTodasCategorias() {
+
+        List<Categoria> categorias = categoriaRepository.findAll();
+        return categorias.stream()
+                .map(categoria -> new CategoriaResponseDTO(
+                        categoria.getId(),
+                        categoria.getNome()
+                ))
+                .collect(Collectors.toList());
+    }
+
     @Override
     public Categoria buscarCategoriaPorNome(String nomeCategoria){
         return categoriaRepository.findByNomeIgnoreCase(nomeCategoria).orElseThrow(()-> new ResourceNotFoundException("Categoria não encontrada"));

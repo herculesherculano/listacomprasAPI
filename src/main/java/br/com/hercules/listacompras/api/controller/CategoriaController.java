@@ -4,14 +4,13 @@ import br.com.hercules.listacompras.api.dto.CategoriaRequestDTO;
 import br.com.hercules.listacompras.api.dto.CategoriaResponseDTO;
 import br.com.hercules.listacompras.api.model.Categoria;
 import br.com.hercules.listacompras.api.service.CategoriaService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/categorias")
@@ -23,6 +22,7 @@ public class CategoriaController {
         this.categoriaService=categoriaService;
     }
 
+    @Operation(summary = "Adicionar categoria", description = "Adiciona uma nova categoria")
     @PostMapping
     public ResponseEntity<CategoriaResponseDTO> cadastrarCategoria(@RequestBody CategoriaRequestDTO novaCategoria){
         var categoriaCadastrada = categoriaService.cadastrarCategoria(novaCategoria);
@@ -31,6 +31,12 @@ public class CategoriaController {
                 .buildAndExpand(categoriaCadastrada.getId())
                 .toUri();
         return ResponseEntity.created(location).body(categoriaCadastrada);
+    }
+    @Operation(summary = "Buscar Categorias", description = "Exibe uma lista com todas as categorias cadastradas")
+    @GetMapping
+    public ResponseEntity<List<CategoriaResponseDTO>> buscarTodasCategorias(){
+        var todasCategorias = categoriaService.buscarTodasCategorias();
+        return ResponseEntity.ok(todasCategorias);
     }
 
 }
