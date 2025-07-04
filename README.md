@@ -7,6 +7,7 @@
   <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black"/>
   <img src="https://img.shields.io/badge/JUnit_5-25A162?style=for-the-badge&logo=junit5&logoColor=white"/>
   <img src="https://img.shields.io/badge/Mockito-FF9900?style=for-the-badge&logo=mockito&logoColor=white"/>
+  <img src="https://img.shields.io/badge/API%20Python-online-brightgreen?style=for-the-badge&logo=python&logoColor=white"/>
 </p>
 
 <h1 align="center"> API de Gerenciamento de Lista de Compras </h1>
@@ -87,10 +88,10 @@ Os testes cobrem:
 
 A categorização dos itens é feita via requisição POST para a API Python, que aplica um modelo de aprendizado de máquina (machine learning) e retorna a categoria mais provável com base no nome do item. Caso a API esteja indisponível, a aplicação trata a exceção e adiciona o item com uma **categoria padrão**.
 
-A URL da API é configurável via `application.properties`:
+A URL da API é configurável via variável de ambiente:
 
 ```properties
-categoria.api.url=http://127.0.0.1:8000/prever/
+categoria.api.url=${CATEGORIA_API_URL}
 ```
 
 ---
@@ -102,35 +103,37 @@ categoria.api.url=http://127.0.0.1:8000/prever/
 - [Java 17+](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
 - [Maven](https://maven.apache.org/download.cgi)
 - [PostgreSQL](https://www.postgresql.org/download/)
-- API Python em execução (porta `8000`)
-
+- Criar o banco de dados no PostgreSQL
+- Configurar as variáveis de ambiente
 ---
 
 ### 🧱 Configuração do banco de dados
 
-1. Crie o banco no PostgreSQL:
+Crie o banco no PostgreSQL:
 
 ```sql
 CREATE DATABASE listacompras_db;
 ```
-
-2. Atualize o arquivo `application.properties`:
-
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/listacompras_db
-spring.datasource.username=seu_usuario
-spring.datasource.password=sua_senha
-
-categoria.api.url=http://127.0.0.1:8000/prever/
-```
-
 ---
+
+### 🔐 Variáveis de Ambiente
+
+Antes de executar a aplicação, configure um arquivo `.env` ou defina as variáveis no ambiente do sistema:
+
+```
+DB_URL=jdbc:postgresql://localhost:5432/listacompras_db
+DB_USERNAME=seu_usuario
+DB_PASSWORD=sua_senha
+CATEGORIA_API_URL=https://web-production-01133.up.railway.app/prever/
+```
+💡 O uso de variáveis de ambiente melhora a segurança e facilita a configuração em diferentes ambientes (desenvolvimento, produção, etc).
+
 
 ### ▶️ Executar a aplicação
 
 ```bash
-git clone https://github.com/seu-usuario/nome-do-repositorio.git
-cd nome-do-repositorio
+git clone https://github.com/herculesherculano/listacomprasAPI
+cd listacomprasAPI
 mvn clean install
 mvn spring-boot:run
 ```
