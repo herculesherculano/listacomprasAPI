@@ -95,6 +95,16 @@ categoria.api.url=${CATEGORIA_API_URL}
 ```
 
 ---
+## 🧪 Modos de execução
+
+Você pode executar a API:
+
+- **Via produção**, já disponível em:
+  - https://listacompras-api.up.railway.app
+  - 🔗 [Swagger UI]( https://listacompras-api.up.railway.app/swagger-ui/index.html)
+
+- **Localmente**, com PostgreSQL instalado e variáveis de ambiente configuradas
+---
 
 ## 🚀 Como rodar localmente
 
